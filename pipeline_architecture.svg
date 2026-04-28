@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 1500" font-family="Arial, sans-serif">
+
+  <defs>
+    <!-- Drop shadow -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="1" result="off"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Arrow markers -->
+    <marker id="arrow-gray" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5F6368"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#1E8E3E"/>
+    </marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#D93025"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1600" height="1500" fill="#FAFBFC"/>
+
+  <!-- =================== TITLE =================== -->
+  <text x="800" y="45" text-anchor="middle" font-size="30" font-weight="bold" fill="#202124">
+    Multi-Turn Tool-Calling Dataset Generation Pipeline
+  </text>
+  <text x="800" y="75" text-anchor="middle" font-size="16" fill="#5F6368">
+    Inputs → Setup → Generation Loop with 7-Stage Filtration → Output
+  </text>
+
+  <!-- =================== INPUTS BAND =================== -->
+  <rect x="40" y="110" width="160" height="120" rx="4" fill="#1A73E8"/>
+  <text x="120" y="155" text-anchor="middle" font-size="14" font-weight="bold" fill="white">INPUTS</text>
+  <text x="120" y="180" text-anchor="middle" font-size="11" fill="#E8F0FE">loaded</text>
+  <text x="120" y="195" text-anchor="middle" font-size="11" fill="#E8F0FE">at startup</text>
+
+  <!-- Input box 1: Tool Catalog -->
+  <g filter="url(#shadow)">
+    <rect x="240" y="110" width="380" height="120" rx="8" fill="#E8F0FE" stroke="#1A73E8" stroke-width="1.5"/>
+  </g>
+  <text x="430" y="138" text-anchor="middle" font-size="15" font-weight="bold" fill="#174EA6">📁 Tool Catalog</text>
+  <text x="430" y="160" text-anchor="middle" font-size="12" fill="#202124">tool_suwon_ocfk_v2.json</text>
+  <text x="430" y="183" text-anchor="middle" font-size="12" fill="#5F6368">39 tools — names, parameter schemas,</text>
+  <text x="430" y="200" text-anchor="middle" font-size="12" fill="#5F6368">descriptions, type signatures</text>
+
+  <!-- Input box 2: Group Recipe -->
+  <g filter="url(#shadow)">
+    <rect x="640" y="110" width="380" height="120" rx="8" fill="#E8F0FE" stroke="#1A73E8" stroke-width="1.5"/>
+  </g>
+  <text x="830" y="138" text-anchor="middle" font-size="15" font-weight="bold" fill="#174EA6">📝 Group Recipe</text>
+  <text x="830" y="160" text-anchor="middle" font-size="12" fill="#202124">gen_NN_&lt;group&gt;.py</text>
+  <text x="830" y="183" text-anchor="middle" font-size="12" font-family="Courier New, monospace" fill="#5F6368">GROUP_NAME, ALLOWLIST,</text>
+  <text x="830" y="200" text-anchor="middle" font-size="12" font-family="Courier New, monospace" fill="#5F6368">SEEDS = [{intent, target_tools, …}]</text>
+
+  <!-- Input box 3: Qwen3-8B -->
+  <g filter="url(#shadow)">
+    <rect x="1040" y="110" width="380" height="120" rx="8" fill="#E8F0FE" stroke="#1A73E8" stroke-width="1.5"/>
+  </g>
+  <text x="1230" y="138" text-anchor="middle" font-size="15" font-weight="bold" fill="#174EA6">🧠 Qwen3-8B</text>
+  <text x="1230" y="160" text-anchor="middle" font-size="12" fill="#202124">Generator LLM</text>
+  <text x="1230" y="183" text-anchor="middle" font-size="12" fill="#5F6368">~16 GB VRAM (8 GB in 4-bit)</text>
+  <text x="1230" y="200" text-anchor="middle" font-size="12" fill="#5F6368">loaded once, reused for all samples</text>
+
+  <!-- Down arrows from inputs to setup -->
+  <line x1="430" y1="240" x2="430" y2="280" stroke="#5F6368" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+  <line x1="830" y1="240" x2="830" y2="280" stroke="#5F6368" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+
+  <!-- =================== SETUP BAND =================== -->
+  <rect x="40" y="290" width="160" height="120" rx="4" fill="#1E8E3E"/>
+  <text x="120" y="335" text-anchor="middle" font-size="14" font-weight="bold" fill="white">SETUP</text>
+  <text x="120" y="360" text-anchor="middle" font-size="11" fill="#E6F4EA">runs once</text>
+  <text x="120" y="375" text-anchor="middle" font-size="11" fill="#E6F4EA">before loop</text>
+
+  <!-- Setup 1: Filter Tools -->
+  <g filter="url(#shadow)">
+    <rect x="240" y="290" width="380" height="120" rx="8" fill="#E6F4EA" stroke="#1E8E3E" stroke-width="1.5"/>
+  </g>
+  <text x="430" y="318" text-anchor="middle" font-size="15" font-weight="bold" fill="#0D652D">① Filter the tool catalog</text>
+  <text x="430" y="343" text-anchor="middle" font-size="13" fill="#202124">keep only tools in ALLOWLIST</text>
+  <text x="430" y="368" text-anchor="middle" font-size="13" font-family="Courier New, monospace" fill="#5F6368">39 tools  →  3 tools</text>
+  <text x="430" y="392" text-anchor="middle" font-size="11" fill="#5F6368" font-style="italic">prevents off-topic drift in generation</text>
+
+  <!-- Setup 2: Prepare Seeds -->
+  <g filter="url(#shadow)">
+    <rect x="640" y="290" width="380" height="120" rx="8" fill="#E6F4EA" stroke="#1E8E3E" stroke-width="1.5"/>
+  </g>
+  <text x="830" y="318" text-anchor="middle" font-size="15" font-weight="bold" fill="#0D652D">② Prepare seeds</text>
+  <text x="830" y="343" text-anchor="middle" font-size="13" fill="#202124">drop seeds with bad refs</text>
+  <text x="830" y="365" text-anchor="middle" font-size="13" fill="#202124">+ auto-add coverage for missing tools</text>
+  <text x="830" y="392" text-anchor="middle" font-size="11" fill="#5F6368" font-style="italic">ensures every allowed tool gets prompted</text>
+
+  <!-- Setup 3: Resume Sigs -->
+  <g filter="url(#shadow)">
+    <rect x="1040" y="290" width="380" height="120" rx="8" fill="#E6F4EA" stroke="#1E8E3E" stroke-width="1.5"/>
+  </g>
+  <text x="1230" y="318" text-anchor="middle" font-size="15" font-weight="bold" fill="#0D652D">③ Load resume signatures</text>
+  <text x="1230" y="343" text-anchor="middle" font-size="13" fill="#202124">read existing JSONL (if any)</text>
+  <text x="1230" y="365" text-anchor="middle" font-size="13" fill="#202124">rebuild accepted_sigs set</text>
+  <text x="1230" y="392" text-anchor="middle" font-size="11" fill="#5F6368" font-style="italic">survive Ctrl-C, crashes, restarts</text>
+
+  <!-- Big arrow into Loop -->
+  <line x1="800" y1="420" x2="800" y2="460" stroke="#5F6368" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+  <!-- =================== MAIN LOOP CONTAINER =================== -->
+  <g filter="url(#shadow)">
+    <rect x="240" y="470" width="1180" height="800" rx="10" fill="#FFFFFF" stroke="#F9AB00" stroke-width="2.5" stroke-dasharray="6,3"/>
+  </g>
+
+  <!-- Loop band label -->
+  <rect x="40" y="470" width="160" height="800" rx="4" fill="#F9AB00"/>
+  <text x="120" y="535" text-anchor="middle" font-size="14" font-weight="bold" fill="white">GENERATION</text>
+  <text x="120" y="555" text-anchor="middle" font-size="14" font-weight="bold" fill="white">LOOP</text>
+  <text x="120" y="585" text-anchor="middle" font-size="11" fill="#FEF7E0">repeats until</text>
+  <text x="120" y="600" text-anchor="middle" font-size="11" fill="#FEF7E0">N samples or</text>
+  <text x="120" y="615" text-anchor="middle" font-size="11" fill="#FEF7E0">N×6 attempts</text>
+
+  <!-- Loop title -->
+  <text x="830" y="500" text-anchor="middle" font-size="16" font-weight="bold" fill="#B86E00">⟳  Per-batch loop  (4 prompts → 4 candidate samples)</text>
+
+  <!-- ─── Generation pipeline (horizontal) ─── -->
+  <!-- Box A: Pick Seed -->
+  <g filter="url(#shadow)">
+    <rect x="270" y="525" width="260" height="80" rx="8" fill="#FEF7E0" stroke="#F9AB00" stroke-width="1.5"/>
+  </g>
+  <text x="400" y="552" text-anchor="middle" font-size="14" font-weight="bold" fill="#B86E00">④ Pick seed</text>
+  <text x="400" y="575" text-anchor="middle" font-size="11" fill="#5F6368">round-robin with</text>
+  <text x="400" y="590" text-anchor="middle" font-size="11" fill="#5F6368">per-seed cap</text>
+
+  <!-- Box B: Build Prompt -->
+  <g filter="url(#shadow)">
+    <rect x="555" y="525" width="260" height="80" rx="8" fill="#FEF7E0" stroke="#F9AB00" stroke-width="1.5"/>
+  </g>
+  <text x="685" y="552" text-anchor="middle" font-size="14" font-weight="bold" fill="#B86E00">⑤ Build prompt</text>
+  <text x="685" y="575" text-anchor="middle" font-size="11" fill="#5F6368">system + tools + seed</text>
+  <text x="685" y="590" text-anchor="middle" font-size="11" fill="#5F6368">+ persona + format</text>
+
+  <!-- Box C: Generate -->
+  <g filter="url(#shadow)">
+    <rect x="840" y="525" width="260" height="80" rx="8" fill="#FEF7E0" stroke="#F9AB00" stroke-width="1.5"/>
+  </g>
+  <text x="970" y="552" text-anchor="middle" font-size="14" font-weight="bold" fill="#B86E00">⑥ Qwen3 batch gen</text>
+  <text x="970" y="575" text-anchor="middle" font-size="11" fill="#5F6368">batch=4, ~30–45 s</text>
+  <text x="970" y="590" text-anchor="middle" font-size="11" fill="#5F6368">on a single A6000</text>
+
+  <!-- Box D: Strip & Split -->
+  <g filter="url(#shadow)">
+    <rect x="1125" y="525" width="260" height="80" rx="8" fill="#FEF7E0" stroke="#F9AB00" stroke-width="1.5"/>
+  </g>
+  <text x="1255" y="552" text-anchor="middle" font-size="14" font-weight="bold" fill="#B86E00">⑦ Strip &lt;think&gt;</text>
+  <text x="1255" y="575" text-anchor="middle" font-size="11" fill="#5F6368">remove reasoning,</text>
+  <text x="1255" y="590" text-anchor="middle" font-size="11" fill="#5F6368">split 4 raw outputs</text>
+
+  <!-- Horizontal arrows between A → B → C → D -->
+  <line x1="530" y1="565" x2="555" y2="565" stroke="#5F6368" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+  <line x1="815" y1="565" x2="840" y2="565" stroke="#5F6368" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+  <line x1="1100" y1="565" x2="1125" y2="565" stroke="#5F6368" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+
+  <!-- Arrow from D down into gauntlet -->
+  <path d="M 1255 605 L 1255 635 L 700 635 L 700 660" stroke="#5F6368" stroke-width="1.5" fill="none" marker-end="url(#arrow-gray)"/>
+  <text x="1100" y="628" font-size="11" fill="#5F6368" font-style="italic">for each candidate (×4) →</text>
+
+  <!-- ─── Filtration Gauntlet ─── -->
+  <text x="700" y="685" text-anchor="middle" font-size="14" font-weight="bold" fill="#B31412">🛡  FILTRATION GAUNTLET — 7 gates, every one must pass</text>
+
+  <!-- Gates (centered around x=540-860, width 320, height 50) -->
+  <!-- Gate 1: Parse JSON -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="700" width="320" height="50" rx="6" fill="#F1F3F4" stroke="#5F6368" stroke-width="1.5"/>
+  </g>
+  <text x="700" y="722" text-anchor="middle" font-size="13" font-weight="bold" fill="#202124">Gate 1 · Parse JSON</text>
+  <text x="700" y="740" text-anchor="middle" font-size="10" fill="#5F6368">strip prose, json.loads()</text>
+  <!-- Reject branch -->
+  <line x1="860" y1="725" x2="990" y2="725" stroke="#D93025" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-red)"/>
+  <text x="925" y="718" text-anchor="middle" font-size="9" fill="#D93025">fail</text>
+  <rect x="990" y="708" width="240" height="34" rx="4" fill="#FCE8E6" stroke="#D93025" stroke-width="1"/>
+  <text x="1110" y="730" text-anchor="middle" font-size="11" fill="#B31412">REJECT — bad / no JSON</text>
+
+  <!-- ok arrow down -->
+  <line x1="700" y1="752" x2="700" y2="772" stroke="#1E8E3E" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="715" y="766" font-size="9" fill="#1E8E3E">ok</text>
+
+  <!-- Gate 2: Schema Check -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="775" width="320" height="50" rx="6" fill="#F1F3F4" stroke="#5F6368" stroke-width="1.5"/>
+  </g>
+  <text x="700" y="797" text-anchor="middle" font-size="13" font-weight="bold" fill="#202124">Gate 2 · Schema check</text>
+  <text x="700" y="815" text-anchor="middle" font-size="10" fill="#5F6368">turns[ ], tools_called[ ] present?</text>
+  <line x1="860" y1="800" x2="990" y2="800" stroke="#D93025" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-red)"/>
+  <text x="925" y="793" text-anchor="middle" font-size="9" fill="#D93025">fail</text>
+  <rect x="990" y="783" width="240" height="34" rx="4" fill="#FCE8E6" stroke="#D93025" stroke-width="1"/>
+  <text x="1110" y="805" text-anchor="middle" font-size="11" fill="#B31412">REJECT — bad shape</text>
+
+  <line x1="700" y1="827" x2="700" y2="847" stroke="#1E8E3E" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="715" y="841" font-size="9" fill="#1E8E3E">ok</text>
+
+  <!-- Gate 3: Tool Exists -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="850" width="320" height="50" rx="6" fill="#F1F3F4" stroke="#5F6368" stroke-width="1.5"/>
+  </g>
+  <text x="700" y="872" text-anchor="middle" font-size="13" font-weight="bold" fill="#202124">Gate 3 · Tool name in schema?</text>
+  <text x="700" y="890" text-anchor="middle" font-size="10" fill="#5F6368">no hallucinated tools</text>
+  <line x1="860" y1="875" x2="990" y2="875" stroke="#D93025" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-red)"/>
+  <text x="925" y="868" text-anchor="middle" font-size="9" fill="#D93025">fail</text>
+  <rect x="990" y="858" width="240" height="34" rx="4" fill="#FCE8E6" stroke="#D93025" stroke-width="1"/>
+  <text x="1110" y="880" text-anchor="middle" font-size="11" fill="#B31412">REJECT — hallucinated tool</text>
+
+  <line x1="700" y1="902" x2="700" y2="922" stroke="#1E8E3E" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="715" y="916" font-size="9" fill="#1E8E3E">ok</text>
+
+  <!-- Gate 4: Args Valid -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="925" width="320" height="50" rx="6" fill="#F1F3F4" stroke="#5F6368" stroke-width="1.5"/>
+  </g>
+  <text x="700" y="947" text-anchor="middle" font-size="13" font-weight="bold" fill="#202124">Gate 4 · Arguments match schema?</text>
+  <text x="700" y="965" text-anchor="middle" font-size="10" fill="#5F6368">required params + correct types</text>
+  <line x1="860" y1="950" x2="990" y2="950" stroke="#D93025" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-red)"/>
+  <text x="925" y="943" text-anchor="middle" font-size="9" fill="#D93025">fail</text>
+  <rect x="990" y="933" width="240" height="34" rx="4" fill="#FCE8E6" stroke="#D93025" stroke-width="1"/>
+  <text x="1110" y="955" text-anchor="middle" font-size="11" fill="#B31412">REJECT — bad arguments</text>
+
+  <line x1="700" y1="977" x2="700" y2="997" stroke="#1E8E3E" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="715" y="991" font-size="9" fill="#1E8E3E">ok</text>
+
+  <!-- Gate 5: Targets Called -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="1000" width="320" height="50" rx="6" fill="#F1F3F4" stroke="#5F6368" stroke-width="1.5"/>
+  </g>
+  <text x="700" y="1022" text-anchor="middle" font-size="13" font-weight="bold" fill="#202124">Gate 5 · All target tools used?</text>
+  <text x="700" y="1040" text-anchor="middle" font-size="10" fill="#5F6368">seed.target_tools ⊆ tools_called</text>
+  <line x1="860" y1="1025" x2="990" y2="1025" stroke="#D93025" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-red)"/>
+  <text x="925" y="1018" text-anchor="middle" font-size="9" fill="#D93025">fail</text>
+  <rect x="990" y="1008" width="240" height="34" rx="4" fill="#FCE8E6" stroke="#D93025" stroke-width="1"/>
+  <text x="1110" y="1030" text-anchor="middle" font-size="11" fill="#B31412">REJECT — missed target tool</text>
+
+  <line x1="700" y1="1052" x2="700" y2="1072" stroke="#1E8E3E" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="715" y="1066" font-size="9" fill="#1E8E3E">ok</text>
+
+  <!-- Gate 6: Duplicate -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="1075" width="320" height="50" rx="6" fill="#F1F3F4" stroke="#5F6368" stroke-width="1.5"/>
+  </g>
+  <text x="700" y="1097" text-anchor="middle" font-size="13" font-weight="bold" fill="#202124">Gate 6 · Signature seen before?</text>
+  <text x="700" y="1115" text-anchor="middle" font-size="10" fill="#5F6368">first_user[:150] + sorted(tool_names)</text>
+  <line x1="860" y1="1100" x2="990" y2="1100" stroke="#D93025" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-red)"/>
+  <text x="925" y="1093" text-anchor="middle" font-size="9" fill="#D93025">yes</text>
+  <rect x="990" y="1083" width="240" height="34" rx="4" fill="#FCE8E6" stroke="#D93025" stroke-width="1"/>
+  <text x="1110" y="1105" text-anchor="middle" font-size="11" fill="#B31412">REJECT — duplicate</text>
+
+  <line x1="700" y1="1127" x2="700" y2="1147" stroke="#1E8E3E" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="715" y="1141" font-size="9" fill="#1E8E3E">no</text>
+
+  <!-- Gate 7: Seed Cap -->
+  <g filter="url(#shadow)">
+    <rect x="540" y="1150" width="320" height="50" rx="6" fill="#F1F3F4" stroke="#5F6368" stroke-width="1.5"/>
+  </g>
+  <text x="700" y="1172" text-anchor="middle" font-size="13" font-weight="bold" fill="#202124">Gate 7 · Seed cap reached?</text>
+  <text x="700" y="1190" text-anchor="middle" font-size="10" fill="#5F6368">cap = max(3, 2× ideal_share)</text>
+  <line x1="860" y1="1175" x2="990" y2="1175" stroke="#D93025" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arrow-red)"/>
+  <text x="925" y="1168" text-anchor="middle" font-size="9" fill="#D93025">yes</text>
+  <rect x="990" y="1158" width="240" height="34" rx="4" fill="#FCE8E6" stroke="#D93025" stroke-width="1"/>
+  <text x="1110" y="1180" text-anchor="middle" font-size="11" fill="#B31412">REJECT — seed quota full</text>
+
+  <line x1="700" y1="1202" x2="700" y2="1222" stroke="#1E8E3E" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+  <text x="715" y="1216" font-size="9" fill="#1E8E3E">no</text>
+
+  <!-- ACCEPT box -->
+  <g filter="url(#shadow)">
+    <rect x="500" y="1225" width="400" height="40" rx="8" fill="#CEEAD6" stroke="#1E8E3E" stroke-width="2"/>
+  </g>
+  <text x="700" y="1251" text-anchor="middle" font-size="15" font-weight="bold" fill="#0D652D">✓  ACCEPT — append to JSONL + flush</text>
+
+  <!-- Loop-back arrow (dashed, curved back to "Pick Seed") -->
+  <path d="M 900 1245 Q 1430 1245 1430 565 L 1395 565" stroke="#F9AB00" stroke-width="1.5" stroke-dasharray="6,4" fill="none" marker-end="url(#arrow-gray)"/>
+  <text x="1450" y="900" font-size="11" fill="#B86E00" font-style="italic" transform="rotate(-90 1450 900)">loop continues until target reached</text>
+
+  <!-- =================== OUTPUT BAND =================== -->
+  <line x1="700" y1="1270" x2="700" y2="1310" stroke="#5F6368" stroke-width="2" marker-end="url(#arrow-gray)"/>
+
+  <rect x="40" y="1320" width="160" height="120" rx="4" fill="#1A73E8"/>
+  <text x="120" y="1370" text-anchor="middle" font-size="14" font-weight="bold" fill="white">OUTPUT</text>
+  <text x="120" y="1395" text-anchor="middle" font-size="11" fill="#E8F0FE">per-group +</text>
+  <text x="120" y="1410" text-anchor="middle" font-size="11" fill="#E8F0FE">final merge</text>
+
+  <!-- Output box: per-group jsonl -->
+  <g filter="url(#shadow)">
+    <rect x="240" y="1320" width="380" height="120" rx="8" fill="#D2E3FC" stroke="#1A73E8" stroke-width="1.5"/>
+  </g>
+  <text x="430" y="1348" text-anchor="middle" font-size="15" font-weight="bold" fill="#174EA6">📄 group_NN_&lt;name&gt;.jsonl</text>
+  <text x="430" y="1372" text-anchor="middle" font-size="12" fill="#202124">one validated sample per line</text>
+  <text x="430" y="1395" text-anchor="middle" font-size="12" fill="#5F6368">{ id, group, persona, tools,</text>
+  <text x="430" y="1412" text-anchor="middle" font-size="12" fill="#5F6368">  turns, tools_called, … }</text>
+
+  <!-- Arrow to merge -->
+  <line x1="630" y1="1380" x2="700" y2="1380" stroke="#5F6368" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+  <text x="665" y="1370" text-anchor="middle" font-size="10" fill="#5F6368" font-style="italic">×11 groups</text>
+
+  <!-- run_all_groups.sh box -->
+  <g filter="url(#shadow)">
+    <rect x="710" y="1320" width="280" height="120" rx="8" fill="#FEF7E0" stroke="#F9AB00" stroke-width="1.5"/>
+  </g>
+  <text x="850" y="1348" text-anchor="middle" font-size="14" font-weight="bold" fill="#B86E00">⚙ run_all_groups.sh</text>
+  <text x="850" y="1372" text-anchor="middle" font-size="11" fill="#202124">orchestrates gen_01 → gen_11</text>
+  <text x="850" y="1393" text-anchor="middle" font-size="11" fill="#5F6368">then concatenates output:</text>
+  <text x="850" y="1413" text-anchor="middle" font-size="10" font-family="Courier New, monospace" fill="#5F6368">cat group_*.jsonl &gt; …</text>
+
+  <!-- Arrow to final dataset -->
+  <line x1="1000" y1="1380" x2="1040" y2="1380" stroke="#5F6368" stroke-width="1.5" marker-end="url(#arrow-gray)"/>
+
+  <!-- Final dataset box -->
+  <g filter="url(#shadow)">
+    <rect x="1050" y="1320" width="380" height="120" rx="8" fill="#CEEAD6" stroke="#1E8E3E" stroke-width="2"/>
+  </g>
+  <text x="1240" y="1348" text-anchor="middle" font-size="15" font-weight="bold" fill="#0D652D">📦 dataset_all_groups.jsonl</text>
+  <text x="1240" y="1372" text-anchor="middle" font-size="12" fill="#202124">merged, balanced multi-turn dataset</text>
+  <text x="1240" y="1395" text-anchor="middle" font-size="12" fill="#5F6368">ready for fine-tuning</text>
+  <text x="1240" y="1412" text-anchor="middle" font-size="12" fill="#5F6368">~220 samples across 11 tool groups</text>
+
+  <!-- Legend -->
+  <g transform="translate(40, 1460)">
+    <text x="0" y="0" font-size="11" font-weight="bold" fill="#202124">Legend:</text>
+    <rect x="55" y="-10" width="14" height="14" rx="2" fill="#E8F0FE" stroke="#1A73E8"/>
+    <text x="75" y="0" font-size="11" fill="#202124">input/output</text>
+    <rect x="170" y="-10" width="14" height="14" rx="2" fill="#E6F4EA" stroke="#1E8E3E"/>
+    <text x="190" y="0" font-size="11" fill="#202124">setup step</text>
+    <rect x="275" y="-10" width="14" height="14" rx="2" fill="#FEF7E0" stroke="#F9AB00"/>
+    <text x="295" y="0" font-size="11" fill="#202124">generation step</text>
+    <rect x="395" y="-10" width="14" height="14" rx="2" fill="#F1F3F4" stroke="#5F6368"/>
+    <text x="415" y="0" font-size="11" fill="#202124">filter gate</text>
+    <rect x="495" y="-10" width="14" height="14" rx="2" fill="#FCE8E6" stroke="#D93025"/>
+    <text x="515" y="0" font-size="11" fill="#202124">rejection bin</text>
+    <rect x="600" y="-10" width="14" height="14" rx="2" fill="#CEEAD6" stroke="#1E8E3E" stroke-width="1.5"/>
+    <text x="620" y="0" font-size="11" fill="#202124">accepted / final output</text>
+  </g>
+
+</svg>
